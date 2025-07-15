@@ -4,9 +4,9 @@
   "github_tagfilter": "15",
   "last_update": "11-11-2023",
   "paused": true,
-  "repository": "alexbelgium/hassio-addons",
+  "repository": "maz00r/hassio-addons",
   "slug": "postgres",
   "source": "github",
   "upstream_repo": "tensorchord/pgvecto.rs",
-  "upstream_version": "15.5"
+  "upstream_version": "15.6"
 }
