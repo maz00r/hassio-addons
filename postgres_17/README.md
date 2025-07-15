@@ -1,5 +1,5 @@
 ## &#9888; Open Issue : [🐛 [Postgres 17] Error with Teslamate en HomeAssistant (opened 2025-07-09)](https://github.com/alexbelgium/hassio-addons/issues/1944) by [@cortesmario](https://github.com/cortesmario)
-# Home assistant add-on: Postgres
+# Home assistant add-on: Postgres maz00r
 
 [![Donate][donation-badge]](https://www.buymeacoffee.com/alexbelgium)
 [![Donate][paypal-badge]](https://www.paypal.com/donate/?hosted_button_id=DZFULJZTP3UQA)
