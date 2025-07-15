@@ -163,7 +163,7 @@ DB_PASSWORD="$(jq -rn --arg x "$DB_PASSWORD" '$x|@uri')"
 if bashio::config.has_value "POSTGRES_USER"; then
 	DB_USERNAME="$(bashio::config 'POSTGRES_USER')"
 else
-	DB_USERNAME="postgres"
+	DB_USERNAME="maz00r"
 fi
 export DB_PORT DB_HOSTNAME DB_USERNAME DB_PASSWORD
 # -----------------------------------------------------------------------------
