@@ -297,7 +297,7 @@ upgrade_postgres_if_needed() {
 	LC_COLLATE=$(su - postgres -c "$BINARIES_DIR/$CLUSTER_VERSION/bin/psql -U \"$DB_USERNAME\" -d postgres -Atc 'SHOW LC_COLLATE;'")
 	LC_CTYPE=$(su - postgres -c "$BINARIES_DIR/$CLUSTER_VERSION/bin/psql -U \"$DB_USERNAME\" -d postgres -Atc 'SHOW LC_CTYPE;'")
 	ENCODING=$(su - postgres -c "$BINARIES_DIR/$CLUSTER_VERSION/bin/psql -U \"$DB_USERNAME\" -d postgres -Atc 'SHOW server_encoding;'")
-	bashio::log.info "Detected cluster: LC_COLLATE=$LC_COLLATE, LC_CTYPE=$LC_CTYPE, ENCODING=$ENCODING"
+	bashio::log.info "Detected cluster: LC_COLLATE=$LC_COLLATE, LC_CTYPE=$LC_CTYPE, ENCODING=$ENCODING, DBUSERNAME=$DB_USERNAME"
 
 	bashio::log.info "Stopping old Postgres ($CLUSTER_VERSION)"
 	su - postgres -c "$BINARIES_DIR/$CLUSTER_VERSION/bin/pg_ctl -w -D '$PGDATA' -o \"-c config_file=/etc/postgresql/postgresql.conf\" stop"
@@ -306,7 +306,7 @@ upgrade_postgres_if_needed() {
 	fix_permissions
 
 	bashio::log.info "Initializing new data cluster for $IMAGE_VERSION"
-	su - postgres -c "$BINARIES_DIR/$IMAGE_VERSION/bin/initdb --encoding=$ENCODING --lc-collate=$LC_COLLATE --lc-ctype=$LC_CTYPE -D '$PGDATA'"
+	su - postgres -c "$BINARIES_DIR/$IMAGE_VERSION/bin/initdb --encoding=$ENCODING --lc-collate=$LC_COLLATE --lc-ctype=$LC_CTYPE -D '$PGDATA' -U \"$DB_USERNAME\"
 	fix_permissions
 
 	bashio::log.info "Running pg_upgrade from $CLUSTER_VERSION → $IMAGE_VERSION"
