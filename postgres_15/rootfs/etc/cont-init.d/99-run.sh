@@ -306,7 +306,7 @@ upgrade_postgres_if_needed() {
 	fix_permissions
 
 	bashio::log.info "Initializing new data cluster for $IMAGE_VERSION"
-	su - postgres -c "$BINARIES_DIR/$IMAGE_VERSION/bin/initdb --encoding=$ENCODING --lc-collate=$LC_COLLATE --lc-ctype=$LC_CTYPE -D '$PGDATA' -U \"$DB_USERNAME\"
+	su - postgres -c "$BINARIES_DIR/$IMAGE_VERSION/bin/initdb --encoding=$ENCODING --lc-collate=$LC_COLLATE --lc-ctype=$LC_CTYPE -D '$PGDATA' -U '$DB_USERNAME'
 	fix_permissions
 
 	bashio::log.info "Running pg_upgrade from $CLUSTER_VERSION → $IMAGE_VERSION"
@@ -314,6 +314,7 @@ upgrade_postgres_if_needed() {
 	su - postgres -c "$BINARIES_DIR/$IMAGE_VERSION/bin/pg_upgrade \
 		-b '$BINARIES_DIR/$CLUSTER_VERSION/bin' -B '$BINARIES_DIR/$IMAGE_VERSION/bin' \
 		-d '$backup_target' -D '$PGDATA' \
+  		-U '$DB_USERNAME' \
 		-o \"-c config_file=/etc/postgresql/postgresql.conf\" \
 		-O \"-c config_file=/etc/postgresql/postgresql.conf\""
 
