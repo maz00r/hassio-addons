@@ -2,7 +2,7 @@
   "arch": ["aarch64", "amd64", "armv7"],
   "backup": "cold",
   "codenotary": "alexandrep.github@gmail.com",
-  "description": "Postgres 15 with VectorChord support",
+  "description": "Postgres 17 with VectorChord support",
   "environment": {
     "CONFIG_LOCATION": "/config/postgresql.conf",
     "PGDATA": "/config/database"
@@ -12,7 +12,7 @@
   "image": "ghcr.io/alexbelgium/postgres-{arch}",
   "init": false,
   "map": ["addon_config:rw", "homeassistant_config:rw", "media:rw"],
-  "name": "Postgres 15",
+  "name": "Postgres 17",
   "options": {
     "POSTGRES_PASSWORD": "homeassistant"
   },
@@ -31,6 +31,6 @@
   },
   "slug": "postgres",
   "udev": true,
-  "url": "https://github.com/alexbelgium/hassio-addons/tree/master/postgres",
-  "version": "15.7-48"
+  "url": "https://github.com/maz00r/hassio-addons/tree/master/postgres",
+  "version": "17.7-48"
 }
