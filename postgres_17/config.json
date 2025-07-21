@@ -9,18 +9,18 @@
   },
   "hassio_api": true,
   "hassio_role": "manager",
-  "image": "ghcr.io/alexbelgium/postgres_17-{arch}",
+  "image": "ghcr.io/maz00r/postgres_17-{arch}",
   "init": false,
   "map": ["addon_config:rw", "homeassistant_config:rw", "media:rw"],
-  "name": "Postgres 17",
+  "name": "Postgres 17 M",
   "options": {
-    "POSTGRES_PASSWORD": "homeassistant"
+    "POSTGRES_PASSWORD": "Patryktelefon.1"
   },
   "ports": {
     "5432/tcp": 5432
   },
   "ports_description": {
-    "5432/tcp": "Postgres"
+    "5432/tcp": "maz00r"
   },
   "schema": {
     "POSTGRES_DB": "str?",
@@ -31,6 +31,6 @@
   },
   "slug": "postgres_latest",
   "udev": true,
-  "url": "https://github.com/alexbelgium/hassio-addons/tree/master/postgres",
+  "url": "https://github.com/maz00r/hassio-addons/tree/master/postgres",
   "version": "17.4-12"
 }
