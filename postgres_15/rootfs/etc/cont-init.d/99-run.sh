@@ -10,10 +10,10 @@ RESTART_FLAG_FILE="$CONFIG_HOME/restart_needed"
 
 fix_permissions() {
 	mkdir -p "$PGDATA"
-	chown -R postgres:postgres "$PGDATA"
+	chown -R maz00r:maz00r "$PGDATA"
 	chmod 700 "$PGDATA"
 	if [ -d /config/backups ]; then
-		chown -R postgres:postgres /config/backups
+		chown -R maz00r:maz00r /config/backups
 		chmod 700 /config/backups
 	fi
 }
@@ -81,20 +81,20 @@ drop_vectors_everywhere() {
 		-o \"-c config_file=/etc/postgresql/postgresql.conf \
 		    -c listen_addresses='' -c port=65432\" start"
 
-	for db in $(su - postgres -c \
+	for db in $(su - maz00r -c \
 		"$BINARIES_DIR/$old_pgver/bin/psql -U \"$DB_USERNAME\" -Atc \
 		    \"SELECT datname FROM pg_database WHERE datistemplate = false AND datallowconn\""); do
-		if su - postgres -c \
+		if su - maz00r -c \
 			"$BINARIES_DIR/$old_pgver/bin/psql -U \"$DB_USERNAME\" -d $db -Atc \
 			    \"SELECT 1 FROM pg_extension WHERE extname='vectors'\"" | grep -q 1; then
 			bashio::log.warning "Dropping extension vectors from DB $db"
-			su - postgres -c \
+			su - maz00r -c \
 				"$BINARIES_DIR/$old_pgver/bin/psql -U \"$DB_USERNAME\" -d $db -c \
 				    'DROP EXTENSION vectors CASCADE;'"
 		fi
 	done
 
-	su - postgres -c "$BINARIES_DIR/$old_pgver/bin/pg_ctl -w -D '$PGDATA' stop"
+	su - maz00r -c "$BINARIES_DIR/$old_pgver/bin/pg_ctl -w -D '$PGDATA' stop"
 }
 
 start_postgres() {
@@ -292,7 +292,7 @@ upgrade_postgres_if_needed() {
 	fix_permissions
 
 	bashio::log.info "Starting old Postgres ($CLUSTER_VERSION) to capture encoding/locale settings"
-	su - postgres -c "$BINARIES_DIR/$CLUSTER_VERSION/bin/pg_ctl -w -D '$PGDATA' -o \"-c config_file=/etc/postgresql/postgresql.conf\" start"
+	su - maz00r -c "$BINARIES_DIR/$CLUSTER_VERSION/bin/pg_ctl -w -D '$PGDATA' -o \"-c config_file=/etc/postgresql/postgresql.conf\" start"
 
 	LC_COLLATE=$(su - postgres -c "$BINARIES_DIR/$CLUSTER_VERSION/bin/psql -U \"$DB_USERNAME\" -d postgres -Atc 'SHOW LC_COLLATE;'")
 	LC_CTYPE=$(su - postgres -c "$BINARIES_DIR/$CLUSTER_VERSION/bin/psql -U \"$DB_USERNAME\" -d postgres -Atc 'SHOW LC_CTYPE;'")
@@ -300,13 +300,13 @@ upgrade_postgres_if_needed() {
 	bashio::log.info "Detected cluster: LC_COLLATE=$LC_COLLATE, LC_CTYPE=$LC_CTYPE, ENCODING=$ENCODING, DBUSERNAME=$DB_USERNAME"
 
 	bashio::log.info "Stopping old Postgres ($CLUSTER_VERSION)"
-	su - postgres -c "$BINARIES_DIR/$CLUSTER_VERSION/bin/pg_ctl -w -D '$PGDATA' -o \"-c config_file=/etc/postgresql/postgresql.conf\" stop"
+	su - maz00r -c "$BINARIES_DIR/$CLUSTER_VERSION/bin/pg_ctl -w -D '$PGDATA' -o \"-c config_file=/etc/postgresql/postgresql.conf\" stop"
 
 	rm -rf "$PGDATA"
 	fix_permissions
 
 	bashio::log.info "Initializing new data cluster for $IMAGE_VERSION"
-	su - postgres -c "$BINARIES_DIR/$IMAGE_VERSION/bin/initdb --encoding=$ENCODING --lc-collate=$LC_COLLATE --lc-ctype=$LC_CTYPE -D '$PGDATA' -U '$DB_USERNAME'
+	su - maz00r -c "$BINARIES_DIR/$IMAGE_VERSION/bin/initdb --encoding=$ENCODING --lc-collate=$LC_COLLATE --lc-ctype=$LC_CTYPE -D '$PGDATA' -U '$DB_USERNAME'
 	fix_permissions
 
 	bashio::log.info "Running pg_upgrade from $CLUSTER_VERSION → $IMAGE_VERSION"
@@ -346,7 +346,7 @@ main() {
 	restart_immich_addons_if_flagged
 
 	# Drop legacy vectors extension (connect as $DB_USERNAME)
-	su - postgres -c "psql -U \"$DB_USERNAME\" -d postgres -c 'DROP EXTENSION IF EXISTS vectors CASCADE;'"
+	su - maz00r -c "psql -U \"$DB_USERNAME\" -d postgres -c 'DROP EXTENSION IF EXISTS vectors CASCADE;'"
 
 	upgrade_extension_if_needed "vectors"
 	upgrade_extension_if_needed "vchord"
